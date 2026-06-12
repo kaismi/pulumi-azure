@@ -135,3 +135,16 @@ pulumi stack ls
 # Select stack
 pulumi stack select dev
 ```
+
+Backup and restore
+
+```shell
+# Backup current (just in case)
+pulumi stack export > before-restore.json
+# Restore
+pulumi stack import < backup-dev.json
+# Sync state
+pulumi refresh
+# Preview changes
+pulumi preview
+```
