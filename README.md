@@ -87,8 +87,51 @@
 # My notes
 
 ```shell
+brew install pulumi
+mkdir pulumi-azure
+cd pulumi-azure
+pulumi new azure-typescript
 # Use local project backend
 mkdir .pulumi-state
-pulumi login file://./.pulumi-state
-pulumi whoami
+pulumi login file://./.pulumi-state # mkaiser
+# Check login user to state
+pulumi whoami # mkaiser
+# Set config
+pulumi config set adminUser admin123
+pulumi config set adminPassword --secret "changeme123" # Passphrase is pass
+# Start
+az logout
+az login
+pulumi up
+# Work
+pulumi destroy
+```
+
+Using az for stopping and starting VM
+
+```shell
+# Check
+az vm get-instance-view \
+  --resource-group rg-vm12df0a39 \
+  --name winvm46aad5e7 \
+  --query "instanceView.statuses[?starts_with(code, 'PowerState/')].displayStatus" \
+  -o tsv
+# Stop
+az vm stop --resource-group rg-vm12df0a39 --name winvm46aad5e7
+# Stop harder with temp state last and no billing for compute any more
+az vm deallocate --resource-group rg-vm12df0a39 --name winvm46aad5e7
+# Start
+az vm start --resource-group rg-vm12df0a39 --name winvm46aad5e7
+```
+
+Using different stacks (stages)
+
+```shell
+pulumi stack init dev
+pulumi stack init quality
+pulumi stack init prod
+# Check stacks
+pulumi stack ls
+# Select stack
+pulumi stack select dev
 ```

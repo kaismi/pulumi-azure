@@ -1,3 +1,6 @@
 encryptionsalt: v1:oS2AKmEzVVw=:v1:r8bGiaczsBrWpwia:moS2AUGaka7jXZcgczn5ZxPlqxn7YQ==
 config:
-  azure-native:location: WestUS2
+  azure-native:location: WestEurope
+  pulumi-azure:adminUser: admin123
+  pulumi-azure:adminPassword:
+    secure: v1:xdKL6HMp1eLtkuLJ:dxP8z4yuDGhgIN/3Nv3kJXbplalw7BN6iYZ+sw==
