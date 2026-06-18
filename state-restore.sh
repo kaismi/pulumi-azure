@@ -14,7 +14,7 @@ fi
 BACKUP_FILE=backup-$(pulumi stack --show-name).json
 
 # --- Configuration ---
-RESOURCE_GROUP=$(pulumi stack output rgName)-state
+RESOURCE_GROUP=$STATE_RG_NAME
 STORAGE_ACCOUNT=${RESOURCE_GROUP//-}
 CONTAINER_NAME=backup
 OVERWRITE=true

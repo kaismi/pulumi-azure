@@ -157,5 +157,6 @@ pulumi preview
 ```shell
 export PULUMI_CONFIG_PASSPHRASE=changeme
 export STATE_ENC_KEY=changeme
+export STATE_RG_NAME=changeme
 ```
 
