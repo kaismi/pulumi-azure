@@ -19,6 +19,8 @@ RESOURCE_GROUP=$STATE_RG_NAME
 STORAGE_ACCOUNT=${RESOURCE_GROUP//-}
 CONTAINER_NAME=backup
 OVERWRITE=true
+ARCHIVE_FILE=".pulumi.tar.gz"
+ENC_FILE="${ARCHIVE_FILE}.enc"
 
 # Pre-shared encryption key (32 bytes for AES-256)
 # Ideally export this as an environment variable: export STATE_ENC_KEY="your32bytekey"
@@ -28,8 +30,9 @@ if [[ -z "$ENC_KEY" ]]; then
   exit 1
 fi
 
-# Temporary encrypted filenames
-ENC_FILE="${BACKUP_FILE}.enc"
+# --- Archive .pulumi folder ---
+echo "Archiving .pulumi folder..."
+tar -czf "$ARCHIVE_FILE" .pulumi/
 
 # --- Get Storage account key ---
 STORAGE_KEY=$(az storage account keys list \
@@ -37,23 +40,22 @@ STORAGE_KEY=$(az storage account keys list \
     --resource-group $RESOURCE_GROUP \
     --query "[0].value" -o tsv)
 
-# --- Encrypt files ---
-echo "Encrypting $BACKUP_FILE..."
-openssl enc -aes-256-cbc -salt -pbkdf2 -pass pass:"$ENC_KEY" -in "$BACKUP_FILE" -out "$ENC_FILE"
-
+# --- Encrypt archive ---
+echo "Encrypting $ARCHIVE_FILE..."
+openssl enc -aes-256-cbc -salt -pbkdf2 -pass pass:"$ENC_KEY" -in "$ARCHIVE_FILE" -out "$ENC_FILE"
 
 # --- Upload encrypted files ---
-echo "Uploading $ENC_FILE to blob $CONTAINER_NAME/$BACKUP_FILE.enc..."
+echo "Uploading $ENC_FILE to blob $CONTAINER_NAME/$ENC_FILE.enc..."
 az storage blob upload \
     --account-name $STORAGE_ACCOUNT \
     --account-key $STORAGE_KEY \
     --container-name $CONTAINER_NAME \
-    --name "$BACKUP_FILE.enc" \
+    --name "$ENC_FILE" \
     --file "$ENC_FILE" \
     --overwrite $OVERWRITE
 
 
-# --- Clean up temporary encrypted files ---
-rm -f "$ENC_FILE"
+# --- Clean up temporary files ---
+rm -f "$ARCHIVE_FILE" "$ENC_FILE"
 
-echo "Upload complete! Files are encrypted in blob storage."
+echo "Upload complete! .pulumi folder is encrypted in blob storage."
