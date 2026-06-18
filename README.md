@@ -92,8 +92,7 @@ mkdir pulumi-azure
 cd pulumi-azure
 pulumi new azure-typescript
 # Use local project backend
-mkdir .pulumi-state
-pulumi login file://./.pulumi-state # mkaiser
+pulumi login file://. # mkaiser
 # Check login user to state
 pulumi whoami # mkaiser
 # Set config
@@ -102,6 +101,7 @@ pulumi config set adminPassword --secret "changeme123" # Passphrase is pass
 # Start
 az logout
 az login
+pulumi preview
 pulumi up
 # Work
 pulumi destroy
@@ -139,12 +139,23 @@ pulumi stack select dev
 Backup and restore
 
 ```shell
-# Backup current (just in case)
-pulumi stack export > before-restore.json
+# Backup
+pulumi stack export > before-dev.json
 # Restore
+pulumi login file://.
+pulumi stack init dev
+export PULUMI_CONFIG_PASSPHRASE=changeme
 pulumi stack import < backup-dev.json
 # Sync state
 pulumi refresh
 # Preview changes
 pulumi preview
 ```
+
+# Set env
+
+```shell
+export PULUMI_CONFIG_PASSPHRASE=changeme
+export STATE_ENC_KEY=changeme
+```
+

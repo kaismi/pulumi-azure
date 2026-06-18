@@ -1,6 +1,6 @@
 /bin/
 /node_modules/
 .idea
-.pulumi-state
+.pulumi
 .envrc
-backup*
+backup*.json

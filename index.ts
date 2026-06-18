@@ -11,6 +11,8 @@ const resourceGroup = new azure.resources.ResourceGroup("rg-vm", {
     location: "westeurope",
 });
 
+export const rgName = resourceGroup.name
+
 // Network
 const vnet = new azure.network.VirtualNetwork("vnet", {
     resourceGroupName: resourceGroup.name,
