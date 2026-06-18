@@ -1,6 +1,6 @@
 #!/bin/bash
 
-RG_NAME=$(pulumi stack output rgName)-state
+RG_NAME=$STATE_RG_NAME
 SA_NAME=${RG_NAME//-}
 CONT_NAME=backup
 

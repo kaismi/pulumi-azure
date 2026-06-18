@@ -150,6 +150,8 @@ pulumi stack import < backup-dev.json
 pulumi refresh
 # Preview changes
 pulumi preview
+# Get rg name
+pulumi stack output rgName
 ```
 
 # Set env
@@ -157,7 +159,7 @@ pulumi preview
 ```shell
 export PULUMI_CONFIG_PASSPHRASE=changeme
 export STATE_ENC_KEY=changeme
-export STATE_RG_NAME=changeme
+export STATE_RG_NAME=changeme # Should be pattern rg-vm12df0a39-state
 ```
 # Restore process from remote state backup
 
@@ -166,6 +168,13 @@ export STATE_RG_NAME=changeme
 git clone https://github.com/kaismi/pulumi-azure.git
 # Install deps
 npm install
+# Az logout login where state rg resides
+az logout
+az login
+# Apply env
+export PULUMI_CONFIG_PASSPHRASE=changeme
+export STATE_ENC_KEY=changeme
+export STATE_RG_NAME=changeme
 # Restore remote state .pulumi folder encrypted with STATE_ENC_KEY
 ./state-restore.sh
 # Login to pulumi backend local
