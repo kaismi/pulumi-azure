@@ -159,4 +159,20 @@ export PULUMI_CONFIG_PASSPHRASE=changeme
 export STATE_ENC_KEY=changeme
 export STATE_RG_NAME=changeme
 ```
+# Restore process from remote state backup
+
+```shell
+# Checkout code
+git clone https://github.com/kaismi/pulumi-azure.git
+# Install deps
+npm install
+# Restore remote state .pulumi folder encrypted with STATE_ENC_KEY
+./state-restore.sh
+# Login to pulumi backend local
+pulumi login file://. 
+# Select stack
+pulumi stack select dev
+# Check no changes
+pulumi preview
+```
 
